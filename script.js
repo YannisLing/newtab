@@ -3,7 +3,7 @@ const defaultShortcuts = [
     { name: 'B站', url: 'https://www.bilibili.com/', icon: 'https://www.bilibili.com/favicon.ico' },
     { name: 'GitHub', url: 'https://github.com/', icon: 'https://github.com/favicon.ico' },
     { name: 'Kimi', url: 'https://kimi.moonshot.cn/', icon: 'https://kimi.moonshot.cn/favicon.ico' },
-    { name: 'DeepSeek', url: 'https://chat.deepseek.com/', icon: 'https://chat.deepseek.com/favicon.ico' },
+    { name: 'DeepSeek', url: 'https://chat.deepseek.com/', icon: 'https://api.faviconkit.com/chat.deepseek.com/64' },
     { name: 'ChatGPT', url: 'https://chat.openai.com/', icon: 'https://chat.openai.com/favicon.ico' },
     { name: 'YouTube', url: 'https://www.youtube.com/', icon: 'https://www.youtube.com/favicon.ico' },
     { name: 'W3School', url: 'https://www.w3schools.com/', icon: 'https://www.w3schools.com/favicon.ico' },
@@ -19,19 +19,8 @@ function initPage() {
 
 // 加载背景图片
 function loadBackground() {
-    try {
-        const savedBg = localStorage.getItem('backgroundImage');
-        if (savedBg) {
-            document.body.style.backgroundImage = `url(${savedBg})`;
-        } else {
-            // 默认背景图片
-            document.body.style.backgroundImage = `url('https://i.imgur.com/6X3X3X3.jpg')`;
-        }
-    } catch (error) {
-        console.error('加载背景图片失败:', error);
-        // 即使出错也设置默认背景
-        document.body.style.backgroundImage = `url('https://i.imgur.com/6X3X3X3.jpg')`;
-    }
+    // 直接设置默认背景图片
+    document.body.style.backgroundImage = `url('default-bg.jpg')`;
 }
 
 // 加载快捷方式
@@ -84,12 +73,7 @@ function setupEventListeners() {
         }
     });
     
-    // 背景更换
-    document.getElementById('change-bg').addEventListener('click', () => {
-        document.getElementById('bg-upload').click();
-    });
-    
-    document.getElementById('bg-upload').addEventListener('change', handleBgUpload);
+
     
     // 添加快捷方式
     document.getElementById('add-shortcut').addEventListener('click', () => {
@@ -122,30 +106,7 @@ function performSearch() {
     }
 }
 
-// 处理背景上传
-function handleBgUpload(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const imageUrl = e.target.result;
-                document.body.style.backgroundImage = `url(${imageUrl})`;
-                localStorage.setItem('backgroundImage', imageUrl);
-                console.log('背景图片已保存');
-            } catch (error) {
-                console.error('保存背景图片失败:', error);
-                // 即使保存失败也更新当前背景
-                const imageUrl = e.target.result;
-                document.body.style.backgroundImage = `url(${imageUrl})`;
-            }
-        };
-        reader.onerror = function(error) {
-            console.error('读取文件失败:', error);
-        };
-        reader.readAsDataURL(file);
-    }
-}
+
 
 // 保存快捷方式
 function saveShortcut() {
