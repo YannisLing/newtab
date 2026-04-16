@@ -19,25 +19,43 @@ function initPage() {
 
 // 加载背景图片
 function loadBackground() {
-    const savedBg = localStorage.getItem('backgroundImage');
-    if (savedBg) {
-        document.body.style.backgroundImage = `url(${savedBg})`;
-    } else {
-        // 默认背景图片
-        document.body.style.backgroundImage = `url('https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=anime%20style%20beautiful%20scenery%20wallpaper&image_size=landscape_16_9')`;
+    try {
+        const savedBg = localStorage.getItem('backgroundImage');
+        if (savedBg) {
+            document.body.style.backgroundImage = `url(${savedBg})`;
+        } else {
+            // 默认背景图片
+            document.body.style.backgroundImage = `url('https://i.imgur.com/6X3X3X3.jpg')`;
+        }
+    } catch (error) {
+        console.error('加载背景图片失败:', error);
+        // 即使出错也设置默认背景
+        document.body.style.backgroundImage = `url('https://i.imgur.com/6X3X3X3.jpg')`;
     }
 }
 
 // 加载快捷方式
 function loadShortcuts() {
-    const shortcuts = JSON.parse(localStorage.getItem('shortcuts')) || defaultShortcuts;
-    const shortcutsGrid = document.getElementById('shortcuts-grid');
-    shortcutsGrid.innerHTML = '';
-    
-    shortcuts.forEach(shortcut => {
-        const shortcutItem = createShortcutItem(shortcut);
-        shortcutsGrid.appendChild(shortcutItem);
-    });
+    try {
+        const shortcuts = JSON.parse(localStorage.getItem('shortcuts')) || defaultShortcuts;
+        const shortcutsGrid = document.getElementById('shortcuts-grid');
+        shortcutsGrid.innerHTML = '';
+        
+        shortcuts.forEach(shortcut => {
+            const shortcutItem = createShortcutItem(shortcut);
+            shortcutsGrid.appendChild(shortcutItem);
+        });
+    } catch (error) {
+        console.error('加载快捷方式失败:', error);
+        // 出错时使用默认快捷方式
+        const shortcutsGrid = document.getElementById('shortcuts-grid');
+        shortcutsGrid.innerHTML = '';
+        
+        defaultShortcuts.forEach(shortcut => {
+            const shortcutItem = createShortcutItem(shortcut);
+            shortcutsGrid.appendChild(shortcutItem);
+        });
+    }
 }
 
 // 创建快捷方式项
@@ -110,9 +128,20 @@ function handleBgUpload(e) {
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const imageUrl = e.target.result;
-            document.body.style.backgroundImage = `url(${imageUrl})`;
-            localStorage.setItem('backgroundImage', imageUrl);
+            try {
+                const imageUrl = e.target.result;
+                document.body.style.backgroundImage = `url(${imageUrl})`;
+                localStorage.setItem('backgroundImage', imageUrl);
+                console.log('背景图片已保存');
+            } catch (error) {
+                console.error('保存背景图片失败:', error);
+                // 即使保存失败也更新当前背景
+                const imageUrl = e.target.result;
+                document.body.style.backgroundImage = `url(${imageUrl})`;
+            }
+        };
+        reader.onerror = function(error) {
+            console.error('读取文件失败:', error);
         };
         reader.readAsDataURL(file);
     }
@@ -125,9 +154,15 @@ function saveShortcut() {
     const icon = document.getElementById('shortcut-icon').value.trim() || getFaviconFromUrl(url);
     
     if (name && url) {
-        const shortcuts = JSON.parse(localStorage.getItem('shortcuts')) || defaultShortcuts;
-        shortcuts.push({ name, url, icon });
-        localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+        try {
+            const shortcuts = JSON.parse(localStorage.getItem('shortcuts')) || defaultShortcuts;
+            shortcuts.push({ name, url, icon });
+            localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
+            console.log('快捷方式已保存');
+        } catch (error) {
+            console.error('保存快捷方式失败:', error);
+            // 即使保存失败也更新界面
+        }
         loadShortcuts();
         document.getElementById('add-shortcut-modal').style.display = 'none';
         resetAddShortcutForm();
