@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新标签页</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="search-container">
+            <div class="search-bar">
+                <select id="search-engine">
+                    <option value="https://www.google.com/search?q=">Google</option>
+                    <option value="https://www.baidu.com/s?wd=">百度</option>
+                    <option value="https://bing.com/search?q=">Bing</option>
+                </select>
+                <input type="text" id="search-input" placeholder="搜索...">
+                <button id="search-btn">搜索</button>
+            </div>
+        </div>
+        
+        <div class="shortcuts-container">
+            <div class="shortcuts-grid" id="shortcuts-grid">
+                <!-- 预设快捷方式将通过JS添加 -->
+            </div>
+            <button id="add-shortcut">添加网站</button>
+        </div>
+    </div>
+    
+    <div class="settings">
+        <button id="change-bg">更换背景</button>
+        <input type="file" id="bg-upload" accept="image/*" style="display: none;">
+    </div>
+    
+    <div class="modal" id="add-shortcut-modal">
+        <div class="modal-content">
+            <h3>添加快捷方式</h3>
+            <input type="text" id="shortcut-name" placeholder="网站名称">
+            <input type="url" id="shortcut-url" placeholder="网站URL">
+            <input type="text" id="shortcut-icon" placeholder="图标URL (可选)">
+            <button id="save-shortcut">保存</button>
+            <button id="cancel-shortcut">取消</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
